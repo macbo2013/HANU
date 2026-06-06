@@ -1,0 +1,14 @@
+{
+  "name": "HANU",
+  "version": "1.0.0-beta.1",
+  "version_label": "V8 第一代公测版",
+  "channel": "public-beta",
+  "min_php": "7.4.0",
+  "requires_migration": true,
+  "release_url": "https://github.com/macbo2013/HANU/releases",
+  "notes": [
+    "新增更新中心",
+    "新增数据库迁移系统",
+    "支持保留 config、data、ICO 更新代码"
+  ]
+}
