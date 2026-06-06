@@ -156,16 +156,3 @@ sudo bash update.sh
    - 不清空旧数据
 
 ## GitHub 版本信息
-
-推荐你每次发布版本时更新：
-
-```text
-VERSION
-VERSION.json
-```
-
-也可以在 GitHub Releases 里发布新版本，tag 例如：
-
-```text
-v1.0.1
-```
