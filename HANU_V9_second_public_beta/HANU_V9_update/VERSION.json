@@ -1,0 +1,16 @@
+{
+  "name": "HANU",
+  "version": "1.0.1-beta.1",
+  "version_label": "HANU V9 第二代公测版",
+  "channel": "public-beta",
+  "min_php": "7.4.0",
+  "requires_migration": true,
+  "release_url": "https://github.com/macbo2013/HANU/releases",
+  "notes": [
+    "版本升级为 HANU V9 第二代公测版",
+    "新增站点公告设置",
+    "首页显示公测公告卡片",
+    "新增关于页面",
+    "更新中心和迁移系统同步升级"
+  ]
+}
