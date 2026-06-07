@@ -16,7 +16,7 @@ shell_mid();
 <h1><?=h(app_name())?></h1>
 <div class="card">
   <h2><?=h(version_label())?></h2>
-  <p class="muted">这是 HANU V10 正式版。当前页面用于展示系统版本、反馈渠道和更新信息。</p>
+  <p class="muted">这是 HANU V11 正式版。当前页面用于展示系统版本、反馈渠道和更新信息。</p>
 </div>
 <div class="grid">
   <div class="card"><h2>版本号</h2><p class="muted"><?=h(hanu_current_version())?></p></div>

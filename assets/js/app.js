@@ -1,0 +1,31 @@
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function toast(s){let e=document.getElementById('toast');if(!e){e=document.createElement('div');e.id='toast';e.style.cssText='position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#111827;color:white;padding:12px 18px;border-radius:999px;z-index:1000';document.body.appendChild(e)}e.textContent=s;setTimeout(()=>e.remove(),1800)}
+function addSwipe(){let s=document.getElementById('pageSwipe');if(!s){s=document.createElement('div');s.id='pageSwipe';s.className='page-swipe';document.body.appendChild(s)}s.classList.remove('show');void s.offsetWidth;s.classList.add('show')}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('a[href]').forEach(a=>{a.addEventListener('click',e=>{let href=a.getAttribute('href')||'';if(href.startsWith('#')||href.startsWith('http')||href.startsWith('mailto:')||a.target==='_blank')return;if(href.includes('outbound.php'))return;e.preventDefault();addSwipe();setTimeout(()=>{location.href=href},220)})})})
+function pendingBubble(box, content, mine=true){if(!box)return null;let el=document.createElement('div');el.className='msg sending '+(mine?'mine':'');el.innerHTML='<b>我</b><div>'+esc(content)+'</div><span>发送中...</span>';box.appendChild(el);box.scrollTop=box.scrollHeight;return el}
+async function loadMessages(target){let box=document.getElementById('msgs');if(!box)return;let r=await fetch('../api/messages.php?target='+encodeURIComponent(target||0));let d=await r.json();if(!d.ok){toast(d.error||'加载失败');return}box.innerHTML=d.rows.map(x=>'<div class="msg '+(x.mine?'mine':'')+'"><b>'+esc(x.username)+'</b><div>'+(x.html||esc(x.content))+'</div><span>'+esc(x.time)+'</span></div>').join('')||'<div class="card">暂无消息</div>';box.scrollTop=box.scrollHeight}
+async function sendMessage(target){let i=document.getElementById('msgInput');let box=document.getElementById('msgs');let c=i.value.trim();if(!c)return;pendingBubble(box,c,true);i.value='';let f=new FormData();f.append('target',target||0);f.append('content',c);let r=await fetch('../api/send.php',{method:'POST',body:f});let d=await r.json();if(d.waf&&d.redirect){location.href=d.redirect;return}if(d.ok){await loadMessages(target)}else{toast(d.error||'发送失败');await loadMessages(target)}}
+async function loadGroupMessages(groupId){let box=document.getElementById('msgs');if(!box)return;let r=await fetch('../api/group_messages.php?id='+encodeURIComponent(groupId));let d=await r.json();if(!d.ok){toast(d.error||'加载失败');return}box.innerHTML=d.rows.map(x=>'<div class="msg '+(x.mine?'mine':'')+'"><b>'+esc(x.username)+'</b><div>'+(x.html||esc(x.content))+'</div><span>'+esc(x.time)+'</span></div>').join('')||'<div class="card">暂无群消息</div>';box.scrollTop=box.scrollHeight}
+async function sendGroupMessage(groupId){
+  let i=document.getElementById('msgInput');
+  let box=document.getElementById('msgs');
+  let c=i.value.trim();
+  if(!c)return;
+  pendingBubble(box,c,true);
+  i.value='';
+  let f=new FormData();
+  f.append('id',groupId);
+  f.append('content',c);
+  try{
+    let r=await fetch('../api/group_send.php',{method:'POST',body:f,credentials:'same-origin'});
+    let d=await r.json();
+    if(d.waf&&d.redirect){location.href=d.redirect;return}
+    if(d.ok){await loadGroupMessages(groupId)}
+    else{toast(d.error||'发送失败');await loadGroupMessages(groupId)}
+  }catch(e){
+    toast('发送失败，请刷新页面重试');
+    await loadGroupMessages(groupId);
+  }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{setTimeout(checkAdminUpdateNotice,1200)});

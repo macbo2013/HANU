@@ -1,18 +1,17 @@
 {
   "name": "HANU",
-  "version": "1.0.2",
-  "version_label": "HANU V10 正式版",
+  "version": "1.0.3",
+  "version_label": "HANU V11 正式版",
   "channel": "stable",
   "min_php": "7.4.0",
   "requires_migration": true,
   "release_url": "https://github.com/macbo2013/HANU/releases",
   "notes": [
-    "发布 HANU V10 正式版",
-    "合并 V9 已知热修复：update.php、about.php、banned.php、群聊、板块等问题",
-    "保留更新中心的“更新源设置”模块",
-    "新增积分名称自定义，管理员可把积分改名为金钱、金币、贡献值等",
-    "新增积分红包系统：用户可发红包，其他用户可领取",
-    "新增红包领取记录和积分流水",
-    "数据库迁移继续兼容旧版本，只补表补字段，不清空旧数据"
+    "发布 HANU V11 正式版",
+    "后台更新中心新增一键网页更新按钮",
+    "保留更新源设置",
+    "新增用户状态系统",
+    "合并 layout.php 语法修复",
+    "完整安装包已确认包含 index.php"
   ]
 }

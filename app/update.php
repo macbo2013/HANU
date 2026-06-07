@@ -5,6 +5,7 @@ require_once __DIR__ . '/../includes/migrations.php';
 
 $u = require_admin();
 $msg = '';
+$updateResult = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $act = $_POST['act'] ?? '';
@@ -20,6 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (Throwable $e) {
             $msg = '数据库升级失败：' . $e->getMessage();
         }
+    } elseif ($act === 'web_update') {
+        try {
+            if ((string)site_setting('web_update_enabled','1') !== '1') {
+                throw new RuntimeException('网页一键更新已被关闭。');
+            }
+            $updateResult = hanu_web_update_run();
+            $msg = '一键更新完成。建议刷新页面并检查版本号。';
+        } catch (Throwable $e) {
+            $msg = '一键更新失败：' . $e->getMessage();
+        }
     }
 }
 
@@ -34,10 +45,19 @@ shell_mid();
 
 <div class="card">
   <b>管理员专用</b>
-  <p class="muted">只有管理员可以访问更新中心。更新不是强制更新，系统只提醒新版本，不会自动更新；是否更新由管理员决定。</p>
+  <p class="muted">只有管理员可以访问更新中心。更新不是强制更新，系统只提醒新版本。V11 支持管理员点击按钮自动更新。</p>
 </div>
 
 <?php if($msg): ?><div class="card"><?=h($msg)?></div><?php endif; ?>
+
+<?php if($updateResult): ?>
+<div class="card">
+  <h2>更新结果</h2>
+  <p class="muted">仓库：<?=h($updateResult['repo'])?> · 分支：<?=h($updateResult['branch'])?></p>
+  <p class="muted">备份目录：<?=h($updateResult['backup'])?></p>
+  <p class="muted">数据库迁移：<?=h($updateResult['migrations'] ? implode(', ', $updateResult['migrations']) : '无新增迁移')?></p>
+</div>
+<?php endif; ?>
 
 <div class="grid">
   <div class="card"><h2>当前版本</h2><p class="muted"><?=h(hanu_current_version())?></p></div>
@@ -51,22 +71,22 @@ shell_mid();
   </div>
 </div>
 
-<?php if(!empty($check['ok']) && !empty($check['has_update'])): ?>
 <div class="card">
-  <h2>发现新版本</h2>
-  <p class="muted">这不是强制更新。请先备份网站和数据库，再在服务器运行 update.sh。更新会保留 config、data、ICO，不会清空用户数据。</p>
-  <pre><code>cd <?=h(HANU_ROOT)?>
-sudo bash update.sh</code></pre>
-  <?php if(!empty($check['release_url'])): ?><a class="btn ghost" href="<?=h($check['release_url'])?>" target="_blank">查看 GitHub 发布页</a><?php endif; ?>
+  <h2>一键网页更新</h2>
+  <p class="muted">点击后系统会自动备份当前文件、从 GitHub 更新源下载源码、保留 config/data/ICO、同步代码并运行数据库兼容升级。</p>
+  <p class="muted">如果服务器没有 ZipArchive、curl 或文件权限不足，可继续使用 update.sh。</p>
+  <form method="post" action="update.php" onsubmit="return confirm('确认开始一键更新？请确保已经备份数据库。');">
+    <input type="hidden" name="act" value="web_update">
+    <button class="btn">立即一键更新</button>
+  </form>
 </div>
-<?php endif; ?>
 
 <div class="card">
   <h2>数据库兼容升级</h2>
   <p class="muted">这个按钮只会补充缺失的数据表和字段，不会删除旧表，不会清空旧数据。</p>
   <form method="post" action="update.php">
     <input type="hidden" name="act" value="migrate">
-    <button class="btn">运行数据库兼容升级</button>
+    <button class="btn ghost">运行数据库兼容升级</button>
   </form>
 </div>
 

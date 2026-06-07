@@ -54,7 +54,7 @@ shell_mid();
 <div class="field"><label>网站名称</label><input name="site_name" value="<?=h(app_name())?>"></div>
 <div class="field"><label>网站简介</label><input name="site_desc" value="<?=h(site_setting('site_desc', cfg('site_desc','')))?>"></div>
 <div class="field"><label>反馈邮箱</label><input name="support_email" value="<?=h(support_email())?>"></div>
-<div class="field"><label>首页公告</label><input name="site_announcement" value="<?=h(site_setting('site_announcement','欢迎使用 HANU V10 正式版。'))?>"></div>
+<div class="field"><label>首页公告</label><input name="site_announcement" value="<?=h(site_setting('site_announcement','欢迎使用 HANU V11 正式版。'))?>"></div>
 <div class="field"><label>积分名称</label><input name="point_name" value="<?=h(point_name())?>" placeholder="例如：积分、金钱、金币、贡献值"></div>
 <p class="muted">这里只改显示名称，不直接修改任何用户余额。</p>
 <button class="btn">保存站点设置</button>
