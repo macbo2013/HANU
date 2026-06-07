@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($act === 'save_repo') {
         set_site_setting('update_repo', clean($_POST['update_repo'] ?? hanu_update_repo(), 120));
         set_site_setting('update_branch', clean($_POST['update_branch'] ?? hanu_update_branch(), 80));
-        $msg = '更新源已保存。';
+        $msg = '更新源设置已保存。';
     } elseif ($act === 'migrate') {
         try {
             $ran = hanu_run_builtin_migrations();
@@ -37,16 +37,10 @@ shell_mid();
   <p class="muted">只有管理员可以访问更新中心。更新不是强制更新，系统只提醒新版本，不会自动更新；是否更新由管理员决定。</p>
 </div>
 
-<?php if($msg): ?>
-<div class="card"><?=h($msg)?></div>
-<?php endif; ?>
+<?php if($msg): ?><div class="card"><?=h($msg)?></div><?php endif; ?>
 
 <div class="grid">
-  <div class="card">
-    <h2>当前版本</h2>
-    <p class="muted"><?=h(hanu_current_version())?></p>
-  </div>
-
+  <div class="card"><h2>当前版本</h2><p class="muted"><?=h(hanu_current_version())?></p></div>
   <div class="card">
     <h2>最新版本</h2>
     <?php if($check['ok']): ?>
@@ -63,9 +57,7 @@ shell_mid();
   <p class="muted">这不是强制更新。请先备份网站和数据库，再在服务器运行 update.sh。更新会保留 config、data、ICO，不会清空用户数据。</p>
   <pre><code>cd <?=h(HANU_ROOT)?>
 sudo bash update.sh</code></pre>
-  <?php if(!empty($check['release_url'])): ?>
-  <a class="btn ghost" href="<?=h($check['release_url'])?>" target="_blank">查看 GitHub 发布页</a>
-  <?php endif; ?>
+  <?php if(!empty($check['release_url'])): ?><a class="btn ghost" href="<?=h($check['release_url'])?>" target="_blank">查看 GitHub 发布页</a><?php endif; ?>
 </div>
 <?php endif; ?>
 
@@ -81,15 +73,9 @@ sudo bash update.sh</code></pre>
 <form class="card" method="post" action="update.php">
   <input type="hidden" name="act" value="save_repo">
   <h2>更新源设置</h2>
-  <div class="field">
-    <label>GitHub 仓库</label>
-    <input name="update_repo" value="<?=h(hanu_update_repo())?>">
-  </div>
-  <div class="field">
-    <label>分支</label>
-    <input name="update_branch" value="<?=h(hanu_update_branch())?>">
-  </div>
-  <button class="btn">保存</button>
+  <div class="field"><label>GitHub 仓库</label><input name="update_repo" value="<?=h(hanu_update_repo())?>"></div>
+  <div class="field"><label>分支</label><input name="update_branch" value="<?=h(hanu_update_branch())?>"></div>
+  <button class="btn">保存更新源设置</button>
 </form>
 
 <div class="card">
@@ -102,10 +88,7 @@ ICO/</code></pre>
 </div>
 
 <?php if(!empty($check['ok']) && !empty($check['notes'])): ?>
-<div class="card">
-  <h2>版本说明</h2>
-  <pre><?=h($check['notes'])?></pre>
-</div>
+<div class="card"><h2>版本说明</h2><pre><?=h($check['notes'])?></pre></div>
 <?php endif; ?>
 
 <?php shell_end(); ?>

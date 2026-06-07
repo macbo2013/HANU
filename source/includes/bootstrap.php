@@ -47,10 +47,17 @@ function app_name(): string {
     return (string)site_setting('site_name', cfg('site_name', 'HANU'));
 }
 function version_label(): string {
-    return (string)site_setting('version_label', cfg('version_label', 'V9 第二代公测版'));
+    return (string)site_setting('version_label', cfg('version_label', 'HANU V10 正式版'));
 }
 
 
+
+
+if (!function_exists('point_name')) {
+function point_name(): string {
+    return (string)site_setting('point_name', cfg('point_name', '积分'));
+}
+}
 
 function support_email(): string {
     return (string)site_setting('support_email', cfg('support_email', 'qm66668888@qq.com'));

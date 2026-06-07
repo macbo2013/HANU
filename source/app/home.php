@@ -13,13 +13,14 @@ $checked=(bool)q_one("SELECT id FROM ".table_name('checkins')." WHERE user_id=? 
 <h1><?=h(app_name())?></h1>
 <p class="muted"><?=h(cfg('site_desc','<?=h(app_name())?>'))?></p>
 <div class="stat">
-  <div class="card"><b><?=h($u['points']??0)?></b><span class="muted">积分</span></div>
+  <div class="card"><b><?=h($u['points']??0)?></b><span class="muted"><?=h(point_name())?></span></div>
   <div class="card"><b>Lv.<?=h($u['level']??1)?></b><span class="muted">等级</span></div>
   <div class="card"><b><?=$checked?'已签到':'未签到'?></b><span class="muted">今日状态</span></div>
 </div>
 <div class="grid">
 <a class="card" href="checkin.php"><h2>签到领积分</h2><p class="muted">每日签到，连续签到有额外奖励。</p></a>
-<a class="card" href="titles.php"><h2>称号中心</h2><p class="muted">用积分解锁并佩戴称号。</p></a>
+<a class="card" href="titles.php"><h2>称号中心</h2><p class="muted">用<?=h(point_name())?>解锁并佩戴称号。</p></a>
+<a class="card" href="red_packets.php"><h2><?=h(point_name())?>红包</h2><p class="muted">发红包、抢红包，查看领取记录。</p></a>
 <a class="card" href="groups.php"><h2>群聊</h2><p class="muted">创建群聊，邀请成员交流。</p></a>
 <a class="card" href="posts.php"><h2><?=h(t('feed'))?></h2><p class="muted">动态、图片、视频、外链安全跳转。</p></a>
 <a class="card" href="friends.php"><h2><?=h(t('friends'))?></h2><p class="muted">好友申请和私信。</p></a>

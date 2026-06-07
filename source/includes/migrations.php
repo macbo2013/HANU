@@ -60,7 +60,7 @@ function hanu_run_builtin_migrations(): array {
     if (!hanu_migration_done($migration)) {
         $settings = hanu_table_raw('settings');
         if (hanu_table_exists($settings)) {
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.3']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.2']);
             q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['update_repo', 'macbo2013/HANU']);
             q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['update_branch', 'main']);
         }
@@ -203,9 +203,9 @@ function hanu_run_builtin_migrations(): array {
     if (!hanu_migration_done($migration)) {
         $settings = hanu_table_raw('settings');
         if (hanu_table_exists($settings)) {
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.3']);
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'V9 第二代公测版']);
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['site_announcement', '欢迎使用 HANU V9 第二代公测版，感谢参与公测。']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.2']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'HANU V10 正式版']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['site_announcement', '欢迎使用 HANU V10 正式版，感谢参与公测。']);
         }
         hanu_mark_migration_done($migration);
         $ran[] = $migration;
@@ -216,8 +216,8 @@ function hanu_run_builtin_migrations(): array {
     if (!hanu_migration_done($migration)) {
         $settings = hanu_table_raw('settings');
         if (hanu_table_exists($settings)) {
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.3']);
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'V9 第二代公测版']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.2']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'HANU V10 正式版']);
             q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['update_notice_admin_only', '1']);
             q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['update_force', '0']);
         }
@@ -235,9 +235,52 @@ function hanu_run_builtin_migrations(): array {
         }
         $settings = hanu_table_raw('settings');
         if (hanu_table_exists($settings)) {
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.3']);
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'HANU V9 第二代公测版 修复版']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.2']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'HANU V10 正式版']);
         }
+        hanu_mark_migration_done($migration);
+        $ran[] = $migration;
+    }
+
+
+    $migration = '2026_06_07_000001_v10_official_red_packets';
+    if (!hanu_migration_done($migration)) {
+        $settings = hanu_table_raw('settings');
+        if (hanu_table_exists($settings)) {
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.2']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'HANU V10 正式版']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['point_name', '积分']);
+        }
+
+        $p = cfg('table_prefix', 'hanu_');
+
+        db()->exec("CREATE TABLE IF NOT EXISTS `{$p}point_packets` (
+          `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+          `user_id` INT UNSIGNED NOT NULL,
+          `title` VARCHAR(120) NOT NULL DEFAULT '恭喜发财',
+          `total_points` INT UNSIGNED NOT NULL,
+          `total_count` INT UNSIGNED NOT NULL,
+          `claimed_count` INT UNSIGNED NOT NULL DEFAULT 0,
+          `claimed_points` INT UNSIGNED NOT NULL DEFAULT 0,
+          `status` ENUM('open','done','cancelled') NOT NULL DEFAULT 'open',
+          `created_at` INT UNSIGNED NOT NULL,
+          `updated_at` INT UNSIGNED NOT NULL,
+          PRIMARY KEY (`id`),
+          KEY `idx_status_time` (`status`,`created_at`),
+          KEY `idx_user` (`user_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+        db()->exec("CREATE TABLE IF NOT EXISTS `{$p}point_packet_claims` (
+          `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+          `packet_id` INT UNSIGNED NOT NULL,
+          `user_id` INT UNSIGNED NOT NULL,
+          `points` INT UNSIGNED NOT NULL,
+          `created_at` INT UNSIGNED NOT NULL,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `uk_packet_user` (`packet_id`,`user_id`),
+          KEY `idx_user_time` (`user_id`,`created_at`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
         hanu_mark_migration_done($migration);
         $ran[] = $migration;
     }

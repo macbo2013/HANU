@@ -68,8 +68,6 @@ CREATE TABLE IF NOT EXISTS `{prefix}boards` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(80) NOT NULL,
   `description` VARCHAR(255) DEFAULT NULL,
-  `password_hash` VARCHAR(255) DEFAULT NULL,
-  `join_mode` VARCHAR(20) NOT NULL DEFAULT 'open',
   `sort_order` INT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
@@ -132,6 +130,33 @@ CREATE TABLE IF NOT EXISTS `{prefix}point_logs` (
   `created_at` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_user` (`user_id`,`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `{prefix}point_packets` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNSIGNED NOT NULL,
+  `title` VARCHAR(120) NOT NULL DEFAULT '恭喜发财',
+  `total_points` INT UNSIGNED NOT NULL,
+  `total_count` INT UNSIGNED NOT NULL,
+  `claimed_count` INT UNSIGNED NOT NULL DEFAULT 0,
+  `claimed_points` INT UNSIGNED NOT NULL DEFAULT 0,
+  `status` ENUM('open','done','cancelled') NOT NULL DEFAULT 'open',
+  `created_at` INT UNSIGNED NOT NULL,
+  `updated_at` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_status_time` (`status`,`created_at`),
+  KEY `idx_user` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `{prefix}point_packet_claims` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `packet_id` INT UNSIGNED NOT NULL,
+  `user_id` INT UNSIGNED NOT NULL,
+  `points` INT UNSIGNED NOT NULL,
+  `created_at` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_packet_user` (`packet_id`,`user_id`),
+  KEY `idx_user_time` (`user_id`,`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `{prefix}friend_requests` (

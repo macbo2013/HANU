@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 APP_NAME="HANU"
-APP_VERSION="V9 Public Beta 2 Admin Update Safe"
+APP_VERSION="V10 Official"
 DEFAULT_REPO_URL="https://github.com/macbo2013/HANU.git"
 DEFAULT_WEB_ROOT="/var/www/hanu"
 

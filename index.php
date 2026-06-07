@@ -44,7 +44,7 @@ function page_start(string $step, array $steps): void {
     if ($idx === false) $idx = 0;
     $pct = round((($idx + 1) / count($steps)) * 100);
     echo '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
-    echo '<title>HANU V9 第二代公测版 安装器</title>';
+    echo '<title>HANU V10 正式版 安装器</title>';
     echo '<link rel="icon" href="ICO/favicon.ico">';
     echo '<style>
     :root{
@@ -165,7 +165,7 @@ function page_start(string $step, array $steps): void {
     </script>';
     echo '</head><body>';
     echo '<div id="nextMask" class="next-mask"><div class="next-card"><div class="next-logo">HU</div><h2>正在执行下一步</h2><p class="muted">HANU 正在保存当前步骤并进入下一页...</p><div class="flow-line"><span></span></div></div></div>';
-    echo '<div class="shell"><aside class="side"><div class="brand"><div class="logo">HU</div><div><b>HANU</b><span class="muted">V9 第二代公测版安装器</span></div></div>';
+    echo '<div class="shell"><aside class="side"><div class="brand"><div class="logo">HU</div><div><b>HANU</b><span class="muted">HANU V10 正式版安装器</span></div></div>';
     echo '<div class="progress-wrap"><div class="progress-top"><span>安装进度</span><span>'.$pct.'%</span></div><div class="progress" style="--pct:'.$pct.'%"><span></span></div></div><div class="steps">';
     $n=1; foreach($steps as $key=>$label) echo '<div class="step '.($key===$step?'on':'').'"><span class="dot">'.$n++.'</span><span>'.h($label).'</span></div>';
     echo '</div></aside><main class="main"><div class="top-actions"><span class="mini">当前地址：'.h(scheme_host().current_base_path()).'</span><button class="theme-toggle" onclick="toggleInstallerTheme()">切换明暗主题</button></div>';
@@ -235,7 +235,7 @@ if($step==='welcome'){
     }
     if(isset($_GET['need_agree'])) $agreeError='请先阅读并同意用户协议。';
     page_start($step,$steps);
-    echo '<section class="hero"><div><div class="logo" style="margin:0 0 18px">HU</div><h1>HANU V9 第二代公测版</h1></div><p>第一代公测版社交系统。支持自定义站点名称、多语言、成员等级、签到积分、称号、群聊、媒体动态、外链安全页、WAF 拦截页和反馈渠道。</p></section>';
+    echo '<section class="hero"><div><div class="logo" style="margin:0 0 18px">HU</div><h1>HANU V10 正式版</h1></div><p>第一代公测版社交系统。支持自定义站点名称、多语言、成员等级、签到积分、称号、群聊、媒体动态、外链安全页、WAF 拦截页和反馈渠道。</p></section>';
     if($agreeError) echo '<div class="notice bad">'.h($agreeError).'</div>';
     echo '<div class="grid"><div class="module"><h3>安全策略</h3><p class="muted">用户触发 WAF 后会进入专门拦截页。每日 5 次违规会被封禁 1 小时；再次违规逐级升级为 1 周、1 月、1 年，最终永久封禁。</p></div><div class="module"><h3>完整系统</h3><p class="muted">包含动态、消息、好友、群聊、板块、签到、积分、等级、称号和管理后台。</p></div><div class="module"><h3>多语言</h3><p class="muted">内置简体中文、繁體中文和 English 语言包，核心功能全部覆盖。</p></div><div class="module"><h3>反馈渠道</h3><p class="muted">公测反馈邮箱：qm66668888@qq.com</p></div></div>';
     echo '<form method="post" action="index.php?step=welcome"><details class="collapse" open><summary>用户协议与安全规则</summary><div class="inner"><p class="muted">1. 本系统用于合法社交交流，禁止发布恶意脚本、攻击代码、违法内容、诈骗链接和破坏性内容。<br>2. 系统包含基础 WAF 与外链中间页，会记录安全触发日志和外链访问日志，供管理员审计。<br>3. 用户每天有 5 次安全触发机会；达到阈值将封禁 1 小时。之后再次违规会升级为 1 周、1 月、1 年，最终永久封禁。<br>4. 安装者应自行遵守当地法律法规并对站点运营负责。</p></div></details><label class="module" style="display:flex;gap:10px;align-items:center"><input type="checkbox" name="agree" value="1"> 我已阅读并同意用户协议与安全规则</label><div class="actions"><button class="btn" type="submit">同意并开始安装</button></div></form>';
@@ -342,7 +342,7 @@ if($step==='install'){
     try{
         $data=$_SESSION['hanu_install']??[]; foreach(['database','site','admin','groups','boards'] as $r){ if(!isset($data[$r]))throw new RuntimeException('安装信息不完整，请返回重新填写。'); }
         recursive_copy(HANU_SOURCE_DIR,HANU_PACKAGE_ROOT); ensure_runtime_dirs();
-        $cfg=['app_name'=>'HANU','app_version'=>'1.0.1-beta.1','update_repo'=>'macbo2013/HANU','update_branch'=>'main','version_label'=>'V9 第二代公测版','support_email'=>'qm66668888@qq.com','language'=>selected_lang(),'site_name'=>$data['site']['site_name'],'site_desc'=>$data['site']['site_desc'],'default_theme'=>$data['site']['theme'],'db_engine'=>$data['database']['db_engine']??'mysql','db_version'=>$data['database']['db_version']??'mysql57','db_host'=>$data['database']['db_host'],'db_port'=>$data['database']['db_port'],'db_name'=>$data['database']['db_name'],'db_user'=>$data['database']['db_user'],'db_pass'=>$data['database']['db_pass'],'db_charset'=>'utf8mb4','table_prefix'=>$data['database']['table_prefix'],'cookie_name'=>'hanu_token'];
+        $cfg=['app_name'=>'HANU','app_version'=>'1.0.2','update_repo'=>'macbo2013/HANU','update_branch'=>'main','version_label'=>'HANU V10 正式版','support_email'=>'qm66668888@qq.com','language'=>selected_lang(),'site_name'=>$data['site']['site_name'],'site_desc'=>$data['site']['site_desc'],'default_theme'=>$data['site']['theme'],'db_engine'=>$data['database']['db_engine']??'mysql','db_version'=>$data['database']['db_version']??'mysql57','db_host'=>$data['database']['db_host'],'db_port'=>$data['database']['db_port'],'db_name'=>$data['database']['db_name'],'db_user'=>$data['database']['db_user'],'db_pass'=>$data['database']['db_pass'],'db_charset'=>'utf8mb4','table_prefix'=>$data['database']['table_prefix'],'cookie_name'=>'hanu_token'];
         file_put_contents(package_path('config/config.php'),"<?php\nreturn ".var_export($cfg,true).";\n");
         copy(HANU_LANGUAGE_DIR.'/'.selected_lang().'.php',package_path('data/lang/current.php')); foreach(['zh_cn','zh_tw','en'] as $lf)copy(HANU_LANGUAGE_DIR.'/'.$lf.'.php',package_path('data/lang/'.$lf.'.php'));
         $pdo=new PDO('mysql:host='.$cfg['db_host'].';port='.$cfg['db_port'].';dbname='.$cfg['db_name'].';charset=utf8mb4',$cfg['db_user'],$cfg['db_pass'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
@@ -355,20 +355,20 @@ if($step==='install'){
         $admin=$data['admin']; $userStmt=$pdo->prepare("INSERT INTO `{$prefix}users`(username,password_hash,avatar_text,avatar_path,signature,theme,role,group_id,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)");
         $userStmt->execute([$admin['username'],password_hash($admin['password'],PASSWORD_DEFAULT),'HU',null,'HANU 管理员',$cfg['default_theme'],'admin',$firstGroupId,$now,$now]);
         $settingStmt=$pdo->prepare("INSERT INTO `{$prefix}settings`(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)");
-        $settingStmt->execute(['site_name',$cfg['site_name']]);$settingStmt->execute(['site_desc',$cfg['site_desc']]);$settingStmt->execute(['language',$cfg['language']]);$settingStmt->execute(['installed_at',date('c')]);$settingStmt->execute(['app_version','1.0.1-beta.1']);$settingStmt->execute(['update_repo','macbo2013/HANU']);$settingStmt->execute(['update_branch','main']);$settingStmt->execute(['support_email','qm66668888@qq.com']);$settingStmt->execute(['version_label','V9 第二代公测版']);$settingStmt->execute(['site_announcement','欢迎使用 HANU V9 第二代公测版，感谢参与公测。']);
+        $settingStmt->execute(['site_name',$cfg['site_name']]);$settingStmt->execute(['site_desc',$cfg['site_desc']]);$settingStmt->execute(['language',$cfg['language']]);$settingStmt->execute(['installed_at',date('c')]);$settingStmt->execute(['app_version','1.0.2']);$settingStmt->execute(['update_repo','macbo2013/HANU']);$settingStmt->execute(['update_branch','main']);$settingStmt->execute(['support_email','qm66668888@qq.com']);$settingStmt->execute(['version_label','HANU V10 正式版']);$settingStmt->execute(['point_name','积分']);$settingStmt->execute(['site_announcement','欢迎使用 HANU V10 正式版，感谢参与公测。']);
         $titleStmt=$pdo->prepare("INSERT INTO `{$prefix}titles`(name,color,min_points,created_at) VALUES(?,?,?,?)");
         foreach([['新人上路','#3b82f6',0],['活跃会员','#10b981',100],['人气达人','#f59e0b',500],['社区明星','#ec4899',1000],['传奇用户','#8b5cf6',3000]] as $titleRow){
             $titleStmt->execute([$titleRow[0],$titleRow[1],$titleRow[2],$now]);
         }
 
         file_put_contents(package_path('data/install.lock'),"installed=".date('c')."\n");
-        echo '<div class="notice"><b>安装成功。</b>HANU V9 第二代公测版 已部署到当前根目录。</div><div class="actions"><a class="btn" href="index.php?step=finish">完成安装</a></div>';
+        echo '<div class="notice"><b>安装成功。</b>HANU V10 正式版 已部署到当前根目录。</div><div class="actions"><a class="btn" href="index.php?step=finish">完成安装</a></div>';
     }catch(Throwable $e){ echo '<div class="notice bad">安装失败：'.h($e->getMessage()).'</div><div class="actions"><a class="btn ghost" href="index.php?step=database">返回数据库设置</a></div>'; }
     page_end(); exit;
 }
 
 if($step==='finish'){
     page_start($step,$steps);
-    echo '<h1>HANU V9 第二代公测版 安装完成</h1><p class="muted">现在可以进入 HANU 社交软件。</p><div class="notice warn">请删除安装文件：source/、language/、README.md。根目录 index.php 已被正式程序覆盖，不要删除正式 index.php。ICO/ 可以保留。</div><div class="actions"><a class="btn" href="app/home.php">进入 HANU</a></div>';
+    echo '<h1>HANU V10 正式版 安装完成</h1><p class="muted">现在可以进入 HANU 社交软件。</p><div class="notice warn">请删除安装文件：source/、language/、README.md。根目录 index.php 已被正式程序覆盖，不要删除正式 index.php。ICO/ 可以保留。</div><div class="actions"><a class="btn" href="app/home.php">进入 HANU</a></div>';
     page_end(); exit;
 }

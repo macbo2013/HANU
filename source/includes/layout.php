@@ -23,12 +23,12 @@ function shell(string $active): array {
     $u = require_user();
     page_head($active, $u);
     echo '<main class="app"><aside class="side glass">';
-    echo '<div class="me" onclick="location.href=\'profile.php\'">' . avatar_html($u, 'av') . '<div><b>' . h($u['username']) . '</b>' . title_badge($u) . '<span>ID ' . h($u['id']) . ' · Lv.' . h($u['level'] ?? 1) . ' · ' . h($u['points'] ?? 0) . '积分</span></div></div>';
+    echo '<div class="me" onclick="location.href=\'profile.php\'">' . avatar_html($u, 'av') . '<div><b>' . h($u['username']) . '</b>' . title_badge($u) . '<span>ID ' . h($u['id']) . ' · Lv.' . h($u['level'] ?? 1) . ' · ' . h($u['points'] ?? 0) . h(point_name())</span></div></div>';
     echo '<div class="site-head"><b>' . h(app_name()) . '</b><span>' . h(version_label()) . '</span></div>'; echo '<nav class="nav">';
     $items = [
       'home'=>t('home'), 'messages'=>t('messages'), 'groups'=>'群聊',
       'friends'=>t('friends'), 'posts'=>t('feed'), 'boards'=>t('boards'),
-      'checkin'=>'签到', 'titles'=>'称号', 'security'=>'安全', 'about'=>'关于', 'notifications'=>t('notifications'), 'profile'=>t('profile')
+      'checkin'=>'签到', 'titles'=>'称号', 'red_packets'=>'红包', 'security'=>'安全', 'about'=>'关于', 'notifications'=>t('notifications'), 'profile'=>t('profile')
     ];
     foreach ($items as $key=>$label) echo '<a class="' . ($active===$key?'on':'') . '" href="' . $key . '.php">' . h($label) . '</a>';
     if (is_admin($u)) { echo '<a class="' . ($active==='admin'?'on':'') . '" href="admin.php">' . h(t('admin')) . '</a>'; echo '<a class="' . ($active==='update'?'on':'') . '" href="update.php">更新</a>'; }
