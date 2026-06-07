@@ -9,6 +9,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         set_site_setting('site_name', clean($_POST['site_name']??app_name(),80));
         set_site_setting('site_desc', clean($_POST['site_desc']??cfg('site_desc',''),180));
         set_site_setting('support_email', clean($_POST['support_email']??support_email(),120));
+        set_site_setting('site_announcement', clean($_POST['site_announcement']??'',255));
         $msg='站点设置已保存';
     }elseif($act==='reset_waf'){
         $id=(int)$_POST['id'];
@@ -47,6 +48,7 @@ shell_mid();
 <div class="field"><label>网站名称</label><input name="site_name" value="<?=h(app_name())?>"></div>
 <div class="field"><label>网站简介</label><input name="site_desc" value="<?=h(site_setting('site_desc', cfg('site_desc','')))?>"></div>
 <div class="field"><label>反馈邮箱</label><input name="support_email" value="<?=h(support_email())?>"></div>
+<div class="field"><label>首页公告</label><input name="site_announcement" value="<?=h(site_setting('site_announcement','欢迎使用 HANU V9 第二代公测版，感谢参与公测。'))?>"></div>
 <button class="btn">保存站点设置</button>
 </form>
 

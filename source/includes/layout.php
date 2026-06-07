@@ -28,7 +28,7 @@ function shell(string $active): array {
     $items = [
       'home'=>t('home'), 'messages'=>t('messages'), 'groups'=>'群聊',
       'friends'=>t('friends'), 'posts'=>t('feed'), 'boards'=>t('boards'),
-      'checkin'=>'签到', 'titles'=>'称号', 'security'=>'安全', 'notifications'=>t('notifications'), 'profile'=>t('profile')
+      'checkin'=>'签到', 'titles'=>'称号', 'security'=>'安全', 'about'=>'关于', 'notifications'=>t('notifications'), 'profile'=>t('profile')
     ];
     foreach ($items as $key=>$label) echo '<a class="' . ($active===$key?'on':'') . '" href="' . $key . '.php">' . h($label) . '</a>';
     if (is_admin($u)) { echo '<a class="' . ($active==='admin'?'on':'') . '" href="admin.php">' . h(t('admin')) . '</a>'; echo '<a class="' . ($active==='update'?'on':'') . '" href="update.php">更新</a>'; }
