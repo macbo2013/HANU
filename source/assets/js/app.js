@@ -6,4 +6,26 @@ function pendingBubble(box, content, mine=true){if(!box)return null;let el=docum
 async function loadMessages(target){let box=document.getElementById('msgs');if(!box)return;let r=await fetch('../api/messages.php?target='+encodeURIComponent(target||0));let d=await r.json();if(!d.ok){toast(d.error||'加载失败');return}box.innerHTML=d.rows.map(x=>'<div class="msg '+(x.mine?'mine':'')+'"><b>'+esc(x.username)+'</b><div>'+(x.html||esc(x.content))+'</div><span>'+esc(x.time)+'</span></div>').join('')||'<div class="card">暂无消息</div>';box.scrollTop=box.scrollHeight}
 async function sendMessage(target){let i=document.getElementById('msgInput');let box=document.getElementById('msgs');let c=i.value.trim();if(!c)return;pendingBubble(box,c,true);i.value='';let f=new FormData();f.append('target',target||0);f.append('content',c);let r=await fetch('../api/send.php',{method:'POST',body:f});let d=await r.json();if(d.waf&&d.redirect){location.href=d.redirect;return}if(d.ok){await loadMessages(target)}else{toast(d.error||'发送失败');await loadMessages(target)}}
 async function loadGroupMessages(groupId){let box=document.getElementById('msgs');if(!box)return;let r=await fetch('../api/group_messages.php?id='+encodeURIComponent(groupId));let d=await r.json();if(!d.ok){toast(d.error||'加载失败');return}box.innerHTML=d.rows.map(x=>'<div class="msg '+(x.mine?'mine':'')+'"><b>'+esc(x.username)+'</b><div>'+(x.html||esc(x.content))+'</div><span>'+esc(x.time)+'</span></div>').join('')||'<div class="card">暂无群消息</div>';box.scrollTop=box.scrollHeight}
-async function sendGroupMessage(groupId){let i=document.getElementById('msgInput');let box=document.getElementById('msgs');let c=i.value.trim();if(!c)return;pendingBubble(box,c,true);i.value='';let f=new FormData();f.append('id',groupId);f.append('content',c);let r=await fetch('../api/group_send.php',{method:'POST',body:f});let d=await r.json();if(d.waf&&d.redirect){location.href=d.redirect;return}if(d.ok){await loadGroupMessages(groupId)}else{toast(d.error||'发送失败');await loadGroupMessages(groupId)}}
+async function sendGroupMessage(groupId){
+  let i=document.getElementById('msgInput');
+  let box=document.getElementById('msgs');
+  let c=i.value.trim();
+  if(!c)return;
+  pendingBubble(box,c,true);
+  i.value='';
+  let f=new FormData();
+  f.append('id',groupId);
+  f.append('content',c);
+  try{
+    let r=await fetch('../api/group_send.php',{method:'POST',body:f,credentials:'same-origin'});
+    let d=await r.json();
+    if(d.waf&&d.redirect){location.href=d.redirect;return}
+    if(d.ok){await loadGroupMessages(groupId)}
+    else{toast(d.error||'发送失败');await loadGroupMessages(groupId)}
+  }catch(e){
+    toast('发送失败，请刷新页面重试');
+    await loadGroupMessages(groupId);
+  }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{setTimeout(checkAdminUpdateNotice,1200)});

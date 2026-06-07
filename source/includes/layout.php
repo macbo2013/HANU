@@ -7,7 +7,7 @@ function page_head(string $title = 'HANU', ?array $u = null): void {
     echo '<title>' . h($title) . ' · ' . h(app_name()) . '</title>';
     echo '<link rel="icon" href="../ICO/favicon.ico">';
     echo '<link rel="stylesheet" href="../assets/css/app.css">';
-    echo '</head><body data-theme="' . h($theme) . '"><div class="orb one"></div><div class="orb two"></div>';
+    echo '<script>window.HANU_IS_ADMIN=' . (($u && is_admin($u)) ? 'true' : 'false') . ';</script>'; echo '</head><body data-theme="' . h($theme) . '"><div class="orb one"></div><div class="orb two"></div>';
 }
 function avatar_html(array $u, string $class = 'av'): string {
     if (!empty($u['avatar_path'])) return '<div class="' . h($class) . ' img"><img src="../' . h($u['avatar_path']) . '" alt=""></div>';

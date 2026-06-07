@@ -50,11 +50,7 @@ function version_label(): string {
     return (string)site_setting('version_label', cfg('version_label', 'V9 第二代公测版'));
 }
 
-function hanu_current_version(): string {
-    $file = HANU_ROOT . '/VERSION';
-    if (file_exists($file)) return trim((string)file_get_contents($file));
-    return (string)site_setting('app_version', cfg('app_version', '1.0.1-beta.1'));
-}
+
 
 function support_email(): string {
     return (string)site_setting('support_email', cfg('support_email', 'qm66668888@qq.com'));

@@ -60,7 +60,7 @@ function hanu_run_builtin_migrations(): array {
     if (!hanu_migration_done($migration)) {
         $settings = hanu_table_raw('settings');
         if (hanu_table_exists($settings)) {
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.1']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.3']);
             q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['update_repo', 'macbo2013/HANU']);
             q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['update_branch', 'main']);
         }
@@ -203,9 +203,40 @@ function hanu_run_builtin_migrations(): array {
     if (!hanu_migration_done($migration)) {
         $settings = hanu_table_raw('settings');
         if (hanu_table_exists($settings)) {
-            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.1']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.3']);
             q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'V9 第二代公测版']);
             q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['site_announcement', '欢迎使用 HANU V9 第二代公测版，感谢参与公测。']);
+        }
+        hanu_mark_migration_done($migration);
+        $ran[] = $migration;
+    }
+
+
+    $migration = '2026_06_06_000005_v9_admin_update_safe';
+    if (!hanu_migration_done($migration)) {
+        $settings = hanu_table_raw('settings');
+        if (hanu_table_exists($settings)) {
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.3']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'V9 第二代公测版']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['update_notice_admin_only', '1']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['update_force', '0']);
+        }
+        hanu_mark_migration_done($migration);
+        $ran[] = $migration;
+    }
+
+
+    $migration = '2026_06_06_000006_v9_group_password_and_hotfix';
+    if (!hanu_migration_done($migration)) {
+        $groups = hanu_table_raw('groups');
+        if (hanu_table_exists($groups)) {
+            hanu_add_column_if_missing($groups, 'password_hash', "VARCHAR(255) DEFAULT NULL");
+            hanu_add_column_if_missing($groups, 'join_mode', "VARCHAR(20) NOT NULL DEFAULT 'open'");
+        }
+        $settings = hanu_table_raw('settings');
+        if (hanu_table_exists($settings)) {
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['app_version', '1.0.1-beta.3']);
+            q_exec("INSERT INTO " . table_name('settings') . "(name,value) VALUES(?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)", ['version_label', 'HANU V9 第二代公测版 修复版']);
         }
         hanu_mark_migration_done($migration);
         $ran[] = $migration;

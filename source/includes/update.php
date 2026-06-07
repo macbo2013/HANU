@@ -1,11 +1,14 @@
 <?php
 require_once __DIR__ . '/auth.php';
 
+if (!function_exists('hanu_current_version')) {
 function hanu_current_version(): string {
     $file = HANU_ROOT . '/VERSION';
     if (file_exists($file)) return trim((string)file_get_contents($file));
     return (string)site_setting('app_version', cfg('app_version', '0.0.0'));
 }
+}
+
 
 function hanu_update_repo(): string {
     return (string)site_setting('update_repo', cfg('update_repo', 'macbo2013/HANU'));

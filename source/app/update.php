@@ -29,6 +29,7 @@ row_item('update.php','更','更新中心','检测版本和升级数据库');
 shell_mid();
 ?>
 <h1>更新中心</h1>
+<div class="card"><b>管理员专用</b><p class="muted">只有管理员可以访问更新中心。系统只提醒新版本，不会强制更新；是否更新由管理员决定。</p></div>
 
 <?php if($msg): ?><div class="card"><?=h($msg)?></div><?php endif; ?>
 
